@@ -1,9 +1,9 @@
 import React from "react";
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Switch,
   Route,
-  Link
+  NavLink
 } from "react-router-dom";
 
 // This site has 3 pages, all of which are rendered
@@ -30,13 +30,13 @@ function Header() {
   return (
     <ul className="header">
       <li>
-        <Link to="/">Home</Link>
+        <NavLink exact to="/">Home</NavLink>
       </li>
       <li>
-        <Link to="/about">About</Link>
+        <NavLink to="/about">About</NavLink>
       </li>
       <li>
-        <Link to="/dashboard">Dashboard</Link>
+        <NavLink to="/dashboard">Dashboard</NavLink>
       </li>
     </ul>
   );
