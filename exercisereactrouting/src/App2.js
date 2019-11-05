@@ -1,11 +1,13 @@
 import React from 'react';
-// import './App.css';
+import './App.css';
+import 'bootstrap/dist/css/bootstrap.css';
 import {
   BrowserRouter as Router,
   Route,
   NavLink,
   Switch,
   useRouteMatch,
+  Redirect,
   useParams
 } from "react-router-dom";
 import data from "./data/data.json";
@@ -39,8 +41,12 @@ function Welcome() {
   return (
     <div>
       <h2>Welcome to our friends site</h2>
-      <NavLink to="/all">See all users</NavLink>
-    </div>
+      <NavLink to="/all">
+        <button type="button">
+          See all users
+     </button>
+      </NavLink>
+    </div >
   )
 }
 
@@ -61,12 +67,21 @@ function All() {
             <tr key={dat.dob}>
               <td><img src={dat.picture.thumbnail} alt={dat.first} /></td>
               <td>{dat.first} {dat.last}</td>
-              <td><NavLink to={`/details/${dat.dob}`}>Details</NavLink></td>
+              <td><NavLink to={`/details/${dat.dob}`}>
+                <button type="button">
+                  Details
+     </button>
+              </NavLink></td>
             </tr>
           ))}
         </tbody>
       </table>
-      <NavLink to="/">Back</NavLink>
+      <NavLink to="/">
+        <button type="button">
+          Back
+     </button>
+      </NavLink>
+
     </div >
   )
 }
@@ -79,10 +94,17 @@ function Details() {
   console.log("user", user);
   return (
     <div>
-      <h2>Details for {user.first} {user.last}</h2>
-      <UserInfo user={user} />
-      <UserImg user={user} />
-      <NavLink to="/all">Back</NavLink>
+      <div id="infobox">
+        <h2>Details for {user.first} {user.last}</h2>
+        <hr />
+        <UserInfo user={user} />
+        <UserImg user={user} />
+      </div>
+      <div></div>
+      <NavLink to="/all">
+        <button type="button">
+          Back
+     </button></NavLink>
     </div>
   );
 }
@@ -90,19 +112,17 @@ function Details() {
 function UserInfo(props) {
   console.log("props.user", props.user);
   return (
-    <div>
-      <ul key={1}>
-        {Object.keys(props.user).map((parts, index) => (index < 12 ?
-          <li key={index}> <span>{parts}</span> <span>{props.user[parts]}</span></li> : ""
-        ))}
-      </ul>
+    <div id="info">
+      {Object.keys(props.user).map((parts, index) => (index < 12 ?
+        <div><span id="keys">{parts}</span>      <span id="values">{props.user[parts]}</span> </div> : ""
+      ))}
     </div >
   )
 }
 
 function UserImg(props) {
   return (
-    <div>
+    <div id="img">
       <img src={props.user.picture.large} alt={props.user.first} />
     </div>
   )
