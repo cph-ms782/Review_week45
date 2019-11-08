@@ -8,40 +8,37 @@ function handleHttpErrors(res) {
     return res.json();
 }
 
-function facade() {
+const facade = () => {
     //Insert utility-methods from a latter step (d) here
-    const setToken = (token) => {
+    setToken = (token) => {
         localStorage.setItem('jwtToken', token)
     }
-    const getToken = () => {
+    getToken = () => {
         return localStorage.getItem('jwtToken')
     }
-    const loggedIn = () => {
+    loggedIn = () => {
         const loggedIn = this.getToken() != null;
         return loggedIn;
     }
-    const logout = () => {
+    logout = () => {
         localStorage.removeItem("jwtToken");
     }
 
-    const login = (user, pass) => {
+    login = (user, pass) => {
         const options = this.makeOptions("POST", true, { username: user, password: pass });
         return fetch(URL + "/api/login", options)
             .then(handleHttpErrors)
-            .then(res => { setToken(res.token) })
+            .then(res => { this.setToken(res.token) })
             .catch(err => { throw err });
     }
 
-    const fetchData = () => {
-        const data = () => {
-            const options = this.makeOptions("GET", true); //True add's the token
-            return fetch(URL + "/api/info/user", options).then(handleHttpErrors);
-        }
-        return data;
+    fetchData = () => {
+        const options = this.makeOptions("GET", true); //True add's the token
+        return fetch(URL + "/api/info/user", options).then(handleHttpErrors);
     }
 
 
-    const makeOptions = (method, addToken, body) => {
+    makeOptions(method, addToken, body) {
         var opts = {
             method: method,
             headers: {
@@ -57,9 +54,5 @@ function facade() {
         }
         return opts;
     }
-
-    return (
-        makeOptions, fetchData, login, logout, getToken, setToken
-    )
 }
 export default facade;

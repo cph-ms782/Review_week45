@@ -7,7 +7,6 @@ import {
   NavLink,
   Switch,
   useRouteMatch,
-  Redirect,
   useParams
 } from "react-router-dom";
 import data from "./data/data.json";
