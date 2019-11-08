@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
-// import 'bootstrap/dist/css/bootstrap.css';
 import {
   BrowserRouter as Router,
   Route,
   NavLink,
+  Prompt,
   Switch
 } from "react-router-dom";
+// import 'bootstrap/dist/css/bootstrap.css';
 
 function App({ bookStore }) {
   console.log("App");
@@ -83,9 +84,75 @@ function Product({ bookStore }) {
 function AddBook({ bookStore }) {
   console.log("AddBook");
   console.log("bookStore", bookStore)
+  const emptyBook = { "id": 0, "title": "", "info": "" };
+  const [book, setBook] = useState({ ...emptyBook });
+  let [isBlocking, setIsBlocking] = useState(false);
+
+  const handleChange = (evt) => {
+    console.log("handleChange");
+    const newBook = { ...book };
+    const target = evt.target;
+    const id = evt.target.id;
+    setIsBlocking(target.value.length > 0);
+    console.log("target.value", target.value);
+    setBook({ ...newBook, [id]: target.value });
+    console.log("book", book);
+  }
+
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+    console.log("submit");
+    console.log("book", book);
+    setIsBlocking(false);
+    bookStore.addBook(book);
+  }
+
   return (
     <div>
-      <h1>hello AddBook</h1>
+      <div>
+        <form className="form-horizontal">
+          <Prompt
+            when={isBlocking}
+            message={location =>
+              `You have unsaved work. Sure you want to go to ${location.pathname}?`
+            }
+          />
+          <div className="form-group">
+            <div className="col-sm-9">
+              <input
+                type="text"
+                className="form-control"
+                id="title"
+                placeholder="Title"
+                value={book.title}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+          <div className="form-group">
+            <div className="col-sm-9">
+              <input
+                type="text"
+                className="form-control"
+                id="info"
+                placeholder="Info"
+                value={book.info}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+          <div className="form-group">
+            <div className="col-sm-offset-3 col-sm-9">
+              <button
+                onClick={handleSubmit}
+                className="btn btn-primary"
+              >
+                Submit
+            </button>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
   )
 }
