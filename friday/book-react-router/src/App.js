@@ -5,7 +5,9 @@ import {
   Route,
   NavLink,
   Prompt,
-  Switch
+  Switch,
+  useParams,
+  useRouteMatch
 } from "react-router-dom";
 // import 'bootstrap/dist/css/bootstrap.css';
 
@@ -67,16 +69,27 @@ function Company() {
 function Product({ bookStore }) {
   console.log("Product");
   console.log("bookStore", bookStore)
+  let { path, url } = useRouteMatch();
   return (
     <div>
       hello Product
       Bookstore size: {bookStore._books.length}
       <ul>
         {bookStore._books.map((book) => (
-          <li key={book.id}>{book.title}</li>
+          <li key={book.id}>{book.title} <NavLink to={`${url}/components/${book.id}`}>Details</NavLink>
+          </li>
         ))
         }
       </ul>
+      <Switch>
+        <Route exact path={path}>
+          <h3>Please select a topic.</h3>
+        </Route>
+        <Route path={`${path}/components/:id`}>
+          <Details bookStore={bookStore} />
+        </Route>
+      </Switch>
+
     </div>
   )
 }
@@ -105,6 +118,7 @@ function AddBook({ bookStore }) {
     console.log("book", book);
     setIsBlocking(false);
     bookStore.addBook(book);
+    setBook({ ...emptyBook });
   }
 
   return (
@@ -153,6 +167,23 @@ function AddBook({ bookStore }) {
           </div>
         </form>
       </div>
+    </div>
+  )
+}
+
+function Details({ bookStore }) {
+  console.log("Details");
+  let { id } = useParams();
+  console.log("id", id);
+  console.log("bookStore._books", bookStore._books);
+  let findBook = bookStore._books.map(book => console.log("in findbook map book", book.info, book.id, id))
+  let findBook2 = bookStore._books.find(book => book.id === id)
+  console.log("findBook2", findBook2);
+  return (
+    <div>
+      <h2>Book details</h2>
+      {/* <p>{book.title}</p> */}
+      {/* <p>{book.info}</p> */}
     </div>
   )
 }
