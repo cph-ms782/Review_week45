@@ -4,9 +4,11 @@ import {
   BrowserRouter as Router,
   Route,
   NavLink,
+  Link,
   Prompt,
   Switch,
   useParams,
+  useHistory,
   useRouteMatch
 } from "react-router-dom";
 // import 'bootstrap/dist/css/bootstrap.css';
@@ -76,7 +78,10 @@ function Product({ bookStore }) {
       Bookstore size: {bookStore._books.length}
       <ul>
         {bookStore._books.map((book) => (
-          <li key={book.id}>{book.title} <NavLink to={`${url}/components/${book.id}`}>Details</NavLink>
+          <li key={book.id}>
+            {book.title} <span></span>
+            <Link to={`${url}/components/${book.id}`}>(Details</Link>
+            <Link to={`${url}/delete/${book.id}`}> - Delete)</Link>
           </li>
         ))
         }
@@ -87,6 +92,9 @@ function Product({ bookStore }) {
         </Route>
         <Route path={`${path}/components/:id`}>
           <Details bookStore={bookStore} />
+        </Route>
+        <Route path={`${path}/delete/:id`}>
+          <Delete bookStore={bookStore} />
         </Route>
       </Switch>
 
@@ -161,7 +169,7 @@ function AddBook({ bookStore }) {
                 onClick={handleSubmit}
                 className="btn btn-primary"
               >
-                Submit
+                Save
             </button>
             </div>
           </div>
@@ -175,15 +183,30 @@ function Details({ bookStore }) {
   console.log("Details");
   let { id } = useParams();
   console.log("id", id);
-  console.log("bookStore._books", bookStore._books);
-  let findBook = bookStore._books.map(book => console.log("in findbook map book", book.info, book.id, id))
-  let findBook2 = bookStore._books.find(book => book.id === id)
-  console.log("findBook2", findBook2);
+  let book = bookStore._books.find(b => b.id == id);
+  console.log("book", book);
   return (
     <div>
       <h2>Book details</h2>
-      {/* <p>{book.title}</p> */}
-      {/* <p>{book.info}</p> */}
+      <p>{book.title}</p>
+      <p>{book.info}</p>
+    </div>
+  )
+}
+
+function Delete({ bookStore }) {
+  let history = useHistory();
+  console.log("Delete");
+  let { id } = useParams();
+  console.log("id", id);
+  let book = bookStore._books.find(b => b.id == id);
+  console.log("bookStore._books.size", bookStore._books.length);
+  bookStore.deleteBook(id);
+  console.log("bookStore._books.size", bookStore._books.length);
+  history.push("/products");
+  return (
+    <div>
+      <h2>Book <i>{book.title}</i> is deleted</h2>
     </div>
   )
 }

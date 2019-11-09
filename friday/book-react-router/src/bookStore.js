@@ -16,6 +16,9 @@ class BookStore {
         this._books.push(book);
         this._nextID++;
     }
+    deleteBook(id) {
+        this._books = this._books.filter(book => book.id != id);
+    }
 }
 let bookStore = new BookStore();
 export default bookStore;
